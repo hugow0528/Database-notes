@@ -1,6 +1,4 @@
-Here is the revised guide, tailored specifically for students learning SQL in Microsoft Access. Commands that are not supported have been removed, and syntax has been corrected to be accurate for Access.
 
-***
 
 ### **Using SQL in Microsoft Access: A Student's Guide**
 
