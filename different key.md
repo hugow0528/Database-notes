@@ -88,28 +88,3 @@
 | **外鍵** | 連繫到另一表格主鍵 | 唔一定（可重複） | 有時可以 | 是 |
 
 ---
-
-## Check Your Understanding / 檢查理解
-**Question**: Design a table for **LibraryBooks** (tracking books in a library). Suggest:
-1. A possible candidate key.
-2. A primary key and why you chose it.
-3. A situation where a composite key might be needed.
-4. A foreign key if this table links to a **Borrowers** table.
-
-**問題**: 設計一個**圖書館書籍**表格（記錄圖書館嘅書）。請建議：
-1. 一個可能嘅候選鍵。
-2. 一個主鍵同點解揀佢。
-3. 一個可能需要複合鍵嘅情況。
-4. 如果呢個表格連繫到**借書人**表格，一個外鍵係點樣。
-
-Try answering, and I’ll guide you if needed!
-
----
-
-## Next Question Suggestions / 下一問題建議
-1. Can you provide another example of a composite key in a different database context?  
-   你可唔可以畀多一個喺唔同資料庫情境入面嘅複合鍵例子？  
-2. What happens if I try to insert a foreign key value that doesn’t exist in the referenced primary key?  
-   如果我試圖插入一個外鍵值，但佢唔存在於參考嘅主鍵，會發生咩事？  
-3. How do I decide which candidate key to use as the primary key for a table?  
-   我點樣決定用邊個候選鍵做表格嘅主鍵？
