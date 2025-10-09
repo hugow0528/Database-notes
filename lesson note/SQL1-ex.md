@@ -150,4 +150,3 @@ ADD (Librarian_ID VARCHAR(5));
 ALTER TABLE Borrow
 ADD CONSTRAINT fk_librarian FOREIGN KEY (Librarian_ID) REFERENCES Librarian(Librarian_ID);
 ```
-```
