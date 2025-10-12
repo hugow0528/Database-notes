@@ -1,4 +1,4 @@
-```markdown
+
 # SQL Practice Exercise — Data Definition Language (DDL) using MySQL
 
 Here are the complete solutions and explanations for the SQL practice exercise, tailored for a MySQL environment.
