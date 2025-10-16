@@ -1,6 +1,5 @@
 
-
-# SQL Notes for iGeneration (Full Version)
+# SQL Notes (Full Version) v1
 
 ## 目錄 (Table of Contents)
 
