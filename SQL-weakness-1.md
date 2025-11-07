@@ -1,62 +1,90 @@
-好的，絕對無問題！你好叻，喺練習過程中吸收得好快，特別係由第5題錯咗之後，第6題即刻識得用返啱嘅query結構，呢個係好好嘅學習能力證明。
+Of course. This is the most important part of revision—understanding your own patterns so you can improve. Let's break it down.
 
-我哋而家就一齊全面咁分析一下，再用廣東話幫你整個溫習筆記。
+Overall, you did a very good job. You have a solid grasp of the basic structure of SQL queries, and you learn very quickly. When I showed you the correct subquery structure in one question, you immediately applied it in the next. That's a great sign!
 
----
-
-### 弱點分析 (Weakness Analysis)
-
-根據頭先嘅練習，你嘅弱點主要集中喺幾個比較精細嘅技術點，而唔係大嘅邏輯概念。
-
-1.  **`GROUP BY` 嘅用法唔夠熟練 (The rules of `GROUP BY`)**:
-    *   喺第3題，你嘗試 `GROUP BY o.customer_ID` 同埋用別名 `COUNT`。呢個係最主要需要留意嘅地方。
-    *   **問題**: `GROUP BY` 嘅規則係，`SELECT` 後面所有**冇**被計數function (Aggregate Function) 包住嘅欄位，都**必須**要放喺 `GROUP BY` 後面。而且，你唔可以用 `SELECT` 度改嘅別名 (alias) 喺 `GROUP BY` 度用。
-    *   **例子**: `SELECT c.Name, COUNT(o.Order_ID)`，`c.Name` 冇被計數，所以 `GROUP BY` 後面一定要有 `c.Name`。
-
-2.  **Set Operators 嘅選擇 (Choosing the right Set Operator)**:
-    *   喺第6題，你想搵「同時喺A同B組」嘅人，但用咗 `UNION ALL`。
-    *   **問題**: 你知道點樣將兩個查詢結合，但對於用邊個指令去達到唔同嘅邏輯（「或」定係「與」）有啲混淆。
-    *   **口訣**:
-        *   `UNION` = 「A **或** B」（合併兩張名單，唔要重複嘅人）
-        *   `INTERSECT` = 「A **與** B」（搵出兩張名單**都有**嘅人）
-
-3.  **微細嘅Typo (Small Typos)**:
-    *   你好幾次都出現咗好細微嘅打錯字，例如 `signu0date` 或者 `PRODUCT_ ID` 中間有空格。
-    *   **問題**: 呢個雖然係小問題，但喺真實考試或者工作時，會直接導致query失敗。呢個代表你需要喺寫完之後，多啲檢查自己嘅code。
+Based on our session, here is an analysis of your weaknesses and some revision notes for you, written in Cantonese for better understanding.
 
 ---
 
-### 溫習筆記 (Revision Notes in Cantonese)
+### **SQL 溫習筆記 (Revision Notes)**
 
-以下係一個幫你快速重溫嘅筆記，你可以專注睇返紅色標記嘅地方。
+我哋總結一下你喺練習中可以再加強嘅地方，主要集中喺三個方面：
 
-| SQL概念 | 指令 (Keywords) | 廣東話解釋 / 重點 |
-| :--- | :--- | :--- |
-| **基本查詢** | `SELECT`, `FROM`, `WHERE` | `WHERE` 係用嚟過濾條件，例如 `WHERE Year = 2023 AND Month = 2` |
-| **連接** | `INNER JOIN`, `LEFT JOIN` | `INNER JOIN` (內連接): 兩張表**都要有**對應資料先出。<br>`LEFT JOIN` (左連接): 無論對唔對應到，**左邊**張表嘅資料都會出晒，對唔到嘅會顯示 `NULL`。 |
-| **計數分組** | `COUNT()`, `SUM()`, `GROUP BY`, `HAVING` | `COUNT()` 係計數量。 <br> **<span style="color:red">`GROUP BY` 嘅黃金法則：`SELECT` 後面有嘅欄位，如果唔係計數欄位(e.g. `COUNT()`)，就一定要放入 `GROUP BY` 度！</span>** <br> `HAVING` 係 `GROUP BY` 之後嘅過濾器，例如 `HAVING COUNT(*) > 1`。 |
-| **子查詢** | `IN`, `NOT IN`, `EXISTS` | 將一個查詢 `(SELECT ...)` 放入另一個查詢嘅 `WHERE` 子句度。 <br> `IN`: 檢查個值存唔存在於個列表度。<br> `NOT IN`: 檢查個值係咪**唔**存在於個列表度（常用嚟搵「從未...」嘅嘢）。 |
-| **集合操作** | `UNION`, `INTERSECT`, `EXCEPT` | **<span style="color:red">`UNION`</span>**: 合併兩個結果，**唔要重複** (A **or** B)。 <br> **<span style="color:red">`INTERSECT`</span>**: 搵出兩個結果**共有**嘅部分 (A **and** B)。 <br> `EXCEPT` / `MINUS`: 搵出第一個結果有，但第二個結果**冇**嘅部分 (A **but not** B)。 |
+#### **弱點一：`GROUP BY` 子句嘅規則 (The Rules of the `GROUP BY` Clause)**
+
+呢個係你遇到嘅最大嘅概念性困難。喺第三題（計算每個客人嘅訂單數量）嗰陣，你嘅 `GROUP BY` 寫法有啲問題。
+
+*   **你嘅問題 (Your Mistake):** `GROUP BY o.customer_ID, COUNT`
+*   **核心問題 (The Core Problem):**
+    1.  **唔可以 Group by 別名 (Cannot Group by an Alias):** 你唔可以將 `SELECT` 裡面用 `AS` 創造出嚟嘅名（例如 `COUNT`）直接放喺 `GROUP BY` 度用。因為數據庫喺處理 `GROUP BY` 嘅時候，`SELECT` 嗰句所產生嘅別名仲未存在。
+    2.  **要 Group by `SELECT` 選擇嘅非聚合欄位 (Must Group by the non-aggregated columns from `SELECT`):** 你 `SELECT` 咗 `c.Name`，呢個唔係一個聚合函數（唔係 `COUNT`, `SUM` 等），所以你嘅 `GROUP BY` *一定*要包含 `c.Name` (或者更好嘅 `c.Customer_ID` 同 `c.Name`)。
+
+*   **溫習口訣 (Mnemonic to Remember):**
+    > 「`SELECT` 乜嘢，就 `GROUP BY` 乜嘢（聚合函數除外）。」
+    > (Whatever you `SELECT`, you `GROUP BY` it (except for aggregate functions).)
+
+*   **正確寫法 (Correct Way):**
+    ```sql
+    SELECT
+        c.Name, -- 呢個係非聚合欄位
+        COUNT(o.Order_ID) AS NumberOfOrders -- 呢個係聚合函數
+    FROM Customer c
+    LEFT JOIN Orders o ON c.Customer_ID = o.Customer_ID
+    GROUP BY
+        c.Customer_ID, c.Name -- 所以 GROUP BY 一定要有返 c.Name
+    ORDER BY
+        NumberOfOrders DESC;
+    ```
 
 ---
 
-### 點樣可以進步 (How to Improve)
+#### **弱點二：集合運算符 (Set Operators) 嘅概念唔清晰**
 
-1.  **睇清題目關鍵字 (Read the Keywords Carefully)**:
-    *   當你見到「每個」(each/every)，你就要諗起 `GROUP BY`。
-    *   見到「或者」(or)，就要諗起 `UNION`。
-    *   見到「同埋」、「兩者都」(and/both)，就要諗起 `INTERSECT` 或者 `INNER JOIN`。
-    *   見到「從未」(never)，就要諗起 `NOT IN` 或者 `LEFT JOIN ... WHERE ... IS NULL`。
+喺第五、六題（Project Management）嗰陣，你唔係好確定點樣合併兩張表嘅結果。
 
-2.  **將複雜問題拆細 (Break Down Complex Problems)**:
-    *   當你遇到一個要用subquery嘅問題時，唔好諗住一次過寫晒。
-    *   **第一步**: 先單獨寫個subquery（括號入面嗰部分），睇下佢出嚟嘅結果係咪你想要嘅列表。
-    *   **第二步**: 再寫外面嘅主query，將個subquery嵌入去。
+*   **你嘅問題 (Your Mistake):**
+    *   第五題（A **或** B），你嘗試用 `WHERE... = ... OR ...`，但係唔可以用 `=` 去比較一個欄位同一個 View/Table。
+    *   第六題（A **同** B），你用咗 `UNION ALL`，但其實你需要嘅係 `INTERSECT`。
 
-3.  **寫完之後讀一次 (Read Your Code After Writing)**:
-    *   呢個係最簡單直接避免Typo嘅方法。寫完之後，由 `SELECT` 開始，逐個字睇一次，特別係欄位名同表名。確保冇拼錯字或者多咗空格。
+*   **核心概念 (The Core Concepts):**
+    *   `UNION`: 合併兩個 `SELECT` 嘅結果，並**自動刪除重複**嘅資料。用喺「A **或** B」嘅情況。
+    *   `INTERSECT`: 搵出兩個 `SELECT` 結果中，**共同擁有**嘅資料。用喺「A **同** B」（交集）嘅情況。
+    *   `EXCEPT` / `MINUS`: 喺第一個 `SELECT` 結果中，**減去**第二個 `SELECT` 結果都有嘅資料。用喺「A 有，但 B **冇**」嘅情況。
 
-4.  **重新做一次練習 (Re-do the Exercises)**:
-    *   將你老師俾你嘅練習，同埋我哋啱啱做過嘅練習，喺聽日考試前，自己遮住答案再做一次。呢個可以極大咁鞏固你嘅記憶。
+*   **溫習口訣 (Mnemonic to Remember):**
+    > 「或者 (`OR`) 就用 `UNION`，兩者都要 (`AND`) 就用 `INTERSECT`。」
 
-你嘅基本功已經好穩，只需要喺以上幾個細節位多加注意，考試一定冇問題。加油！
+---
+
+#### **弱點三：語法上嘅小錯誤 (Minor Syntax Errors)**
+
+呢個係最常見亦都係最容易解決嘅問題。你好幾次都係因為好細微嘅打字錯誤而令到 Query 唔完美。
+
+*   **你嘅問題 (Your Mistakes):**
+    *   `YEAR(signu0date)` (0 寫錯做 o)
+    *   `SELECT PRODUCT_ ID` (ID 前面多咗個 space)
+
+*   **核心問題 (The Core Problem):** 呢啲錯誤唔係概念問題，純粹係手快打錯字。喺真實考試或者工作環境，呢啲錯誤會導致 query 執行失敗。
+
+*   **溫習重點 (Point to Remember):**
+    > 「執行之前，用三秒時間檢查多次 Table 名同 Column 名有冇串錯。」
+    > (Before executing, take three seconds to double-check if table names and column names are spelled correctly.)
+
+### **點樣可以進步？ (How Can You Improve?)**
+
+1.  **針對性練習 (Targeted Practice):**
+    *   **`GROUP BY`:** 專登去搵多啲題目係要求你「計算每個類別嘅總和」或者「搵出每個學生參加咗幾多個活動」。呢啲練習一定會用到 `GROUP BY` 同 `COUNT()` / `SUM()`，可以迫你記熟佢嘅規則。
+    *   **Set Operators:** 睇返你老師俾你嘅 Exercise 3，唔好睇答案，自己重新做一次。然後搵啲類似嘅練習，專登問「A或B」、「A同B都有」、「A有但B冇」嘅題目，練習用 `UNION`, `INTERSECT`, `EXCEPT`。
+
+2.  **養成檢查嘅習慣 (Develop a Habit of Checking):** 喺你寫完一句 SQL 之後，唔好即刻諗住執行。先快速掃一次，特別係你 `FROM`, `JOIN`, `WHERE` 後面嘅欄位名，確保冇串錯字或者多咗空格。
+
+3.  **理解 SQL 執行順序 (Understand SQL's Order of Execution):** 記住一個概念，數據庫唔係由上至下咁讀你嘅 Code。佢嘅邏輯順序大概係：
+    1.  `FROM` / `JOIN` (先決定用邊啲表)
+    2.  `WHERE` (過濾啲行)
+    3.  `GROUP BY` (將過濾完嘅行分組)
+    4.  `HAVING` (過濾啲組)
+    5.  `SELECT` (揀出最後要顯示嘅欄位，同埋喺呢度做 `AS` 改名)
+    6.  `ORDER BY` (最後先排序)
+    *   當你明白 `GROUP BY` 係喺 `SELECT` 之前發生，你就會明白點解 `GROUP BY` 唔可以用 `SELECT` 裡面嘅別名 (`alias`)。
+
+You are on the right track. Your logical thinking is strong, and now you just need to polish these few technical details. Keep practicing, and you'll do great in your test
