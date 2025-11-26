@@ -116,4 +116,3 @@ Remember to spend more time on studying“normalization” and “ER Digram”.
 3.  **Order (次序):**
     `SELECT` -> `FROM` -> `WHERE` -> `GROUP BY` -> `HAVING` -> `ORDER BY`.
 
-(
